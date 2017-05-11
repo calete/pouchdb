@@ -1,37 +1,34 @@
 var db = new PouchDB('offline');
 var app=angular.module('root', []);
-app.controller('root', ['$scope', function($scope){
-    $scope.data=[];
+app.controller('root', ['$scope', '$interval', function($scope, $interval){
+    //$scope.data=[];
     $scope.prueba='Online';
     $scope.agregar=function(){
         //$scope.data.unshift($scope.nombres);
         db.post({nombres:$scope.nombres});
         $scope.nombres='';
-        dumpData();
+        $scope.dumpData;
     }
     $scope.borrar=function(){
         $scope.data=[];
     }
-    
-    /*db.changes({
-        since:'now',
-        live:true
-    }).on('change', dumpData);*/
-    
-    function dumpData(){
+        
+    $scope.dumpData=function(){
         db.allDocs({include_docs: true}).then(function(data){
             //console.log(data.rows);
             $scope.data=data.rows;
-            //console.log($scope.data);
-            /*$.each($scope.data, function(key, el){
-                console.log(el.doc.nombres);
-            });*/
+            $scope.prueba='Cargado';
         });
     }
-    dumpData();
+    $interval(function(){
+        $scope.dumpData();
+    }, 500);
+    //$scope.dumpData;
 }]);
 
-
+app.controller('intervalController', ['$interval', '$timeout', function($interval, $timeout){
+    $interval(function(){console.log('yotas')}, 1000);
+}]);
 /*var db = new PouchDB('pruebas');
 
 doc1={
