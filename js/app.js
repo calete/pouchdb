@@ -2,7 +2,7 @@ var db = new PouchDB('offline');
 var app=angular.module('root', []);
 app.controller('root', ['$scope', '$interval', function($scope, $interval){
     //$scope.data=[];
-    $scope.prueba='Online';
+    //$scope.prueba='Online';
     $scope.agregar=function(){
         //$scope.data.unshift($scope.nombres);
         db.post({nombres:$scope.nombres});
@@ -10,20 +10,37 @@ app.controller('root', ['$scope', '$interval', function($scope, $interval){
         $scope.dumpData;
     }
     $scope.borrar=function(){
-        $scope.data=[];
+        db.allDocs({include_docs: true}).then(function(docs){
+            $.each(docs.rows, function(key, doc){
+                db.remove(doc.id, doc.value.rev).then(function(){console.log('recurso borrado')}).catch(function(){console.log('recurso no borrado')});
+                //console.log(doc.id+':'+doc.value.rev);
+            })
+        });
     }
         
     $scope.dumpData=function(){
         db.allDocs({include_docs: true}).then(function(data){
             //console.log(data.rows);
             $scope.data=data.rows;
-            $scope.prueba='Cargado';
+            //$scope.prueba='Cargado';
         });
     }
     $interval(function(){
         $scope.dumpData();
-    }, 500);
+    }, 10);
     //$scope.dumpData;
+    $(window).bind({
+        online:function(){
+            $scope.prueba='Online'
+            console.log('online');
+        },
+        offline:function(){
+            console.log('offline');
+            $scope.prueba='Offline'
+        }
+    });
+    if(window.navigator.onLine)$scope.prueba='Online';
+    if(!window.navigator.onLine)$scope.prueba='Offline';
 }]);
 
 app.controller('intervalController', ['$interval', '$timeout', function($interval, $timeout){

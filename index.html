@@ -8,19 +8,27 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <script src="js/jquery.min.js"></script>
     <script src="js/angular.min.js"></script>
+    <style>
+    body
+    </style>
 </head>
 <body ng-app="root" ng-controller="root">
-
+<div class="container" style="margin-top: 20px">
 <form>
+    <div class="form-group">
     <label for="nombres">Nombres</label>
-    <input type="text" ng-model="nombres">
-    <input type="submit" value="Agregar" ng-click="agregar()">
-    <input type="button" value="Borrar" ng-click="borrar()">
+    <input type="text" ng-model="nombres" class="form-control">
+    </div>
+    <div class="form-group">
+    <input type="submit" value="Agregar" ng-click="agregar()" class="btn btn-primary">
+    <input type="button" value="Borrar" ng-click="borrar()" class="btn btn-default">
+    </div>
 </form>
-<p>{{prueba}}</p>
-<ul>
+<p ng-cloak>{{prueba}}</p>
+<ul ng-cloak>
 <li ng-repeat="x in data">{{x.doc.nombres}}</li>
 </ul>
+</div>
 <script src="js/pouchdb.min.js"></script>
 <script src="js/app.js"></script>
 </body>
